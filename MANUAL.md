@@ -4,13 +4,13 @@
 
 ---
 
-## What You Need Before Starting
+## What You Need
 
 - A computer running **macOS, Windows, or Linux**
-- **At least 8 GB RAM** (16 GB or more recommended)
+- **At least 8 GB RAM** (16 GB+ recommended)
 - **10 GB free disk space**
-- **Python installed** — check by opening a terminal and typing `python --version`. If you don't have it, download from [python.org](https://python.org) (free)
-- **An internet connection** during setup
+- **Python 3.9+** — check by typing `python --version` in your terminal. If it's missing, install free from [python.org](https://python.org)
+- **Internet connection** during setup
 
 ---
 
@@ -22,83 +22,214 @@
 
 ## Step 2: Download the Installer
 
-Copy and paste this line into your terminal, then press Enter:
+Copy and paste this into your terminal, then press Enter:
 
 ```
 curl -O https://raw.githubusercontent.com/tojdpg/hermes-one-click/main/install.py
 ```
 
-You should see a file called `install.py` appear in your current folder.
-
-> **Windows users**: If `curl` doesn't work, download the file directly from [the GitHub page](https://github.com/tojdpg/hermes-one-click) by clicking the green "Code" button → "Download ZIP", then unzip it.
+> **Windows**: If `curl` doesn't work, go to [github.com/tojdpg/hermes-one-click](https://github.com/tojdpg/hermes-one-click), click the green "Code" button → "Download ZIP", then unzip it.
 
 ## Step 3: Run the Installer
-
-Copy and paste this line, then press Enter:
 
 ```
 python install.py
 ```
 
-The installer will now:
+You'll see something like this on screen:
 
-1. **Scan your computer** — it detects your RAM, GPU, processor, and disk space automatically. You'll see a summary on screen.
-2. **Pick the right model** — based on your hardware, it selects a model that will run well on your machine. Bigger computers get smarter models; smaller ones get lighter ones. If your computer is too weak for local AI, it sets up cloud-only mode.
-3. **Install Hermes** — the AI agent framework. This takes about 1–2 minutes.
-4. **Install the runtime** — a program called Ollama that runs the AI model locally. Another 1–2 minutes.
-5. **Download the model** — a 5–20 GB file depending on your hardware. **This is the slow part** — it can take 5–30 minutes depending on your internet speed. Leave the terminal open and let it finish.
-6. **Ask about OpenRouter** (optional) — you'll see:
+```
+╔══════════════════════════════════════════════════╗
+║     Hermes One-Click Installer v1.0.0             ║
+╚══════════════════════════════════════════════════╝
 
-   ```
-   Add OpenRouter API key now? [y/N]:
-   ```
+── Detecting Hardware ──
 
-   - Type `y` and paste a key from [openrouter.ai/keys](https://openrouter.ai/keys) if you want cloud fallback (gives your agent access to powerful cloud models like Claude or GPT for hard tasks)
-   - Type `N` or just press Enter to skip — you can always add this later
+  OS:           macos
+  Architecture: arm64
+  CPU cores:    8
+  RAM:          16 GB
+  GPU:          apple (Apple M2) — 16 GB (unified memory)
+  Disk free:    212 GB
+```
 
-7. **Write the configuration** — the installer creates a settings file automatically. You're done.
+The installer then runs through these steps automatically:
 
-## Step 4: Start Using Your AI Agent
+| Step | What happens | Time |
+|------|-------------|------|
+| **1. Scan hardware** | Detects RAM, GPU, disk, OS | instant |
+| **2. Pick model** | Matches your hardware to a model tier (e.g. 16 GB → Llama 8B) | instant |
+| **3. Install Hermes** | Installs the Hermes Agent framework | 1–2 min |
+| **4. Install Ollama** | Installs the local model runtime | 1–2 min |
+| **5. Download model** | Downloads a 5–20 GB model file | 5–30 min |
+| **6. Ask about OpenRouter** | Optional — see below | 10 seconds |
+| **7. Write config** | Creates `~/.hermes/config.yaml` automatically | instant |
 
-Once the installer says "Installation Complete!", type:
+During step 5, you'll see a progress bar or download percentage. **Leave the terminal open and let it finish.** This is the slow part.
+
+### The OpenRouter question
+
+After the model downloads, you'll see:
+
+```
+Add OpenRouter API key now? [y/N]:
+```
+
+- **Type `y`** and paste a key from [openrouter.ai/keys](https://openrouter.ai/keys) → gives your agent cloud fallback for hard tasks (Claude, GPT, etc.)
+- **Type `N`** or just press Enter → skip, everything still works locally. You can add it later.
+
+### When it's done
+
+```
+✓ Hermes One-Click Installer finished successfully!
+
+Next Steps:
+  1. hermes              ← start chatting
+  2. hermes setup        ← run setup wizard (recommended)
+  3. hermes desktop      ← open desktop app
+  4. hermes doctor       ← check everything works
+```
+
+## Step 4: Start Using It
 
 ```
 hermes
 ```
 
-You're now chatting with your own AI assistant. It runs **on your computer** — no data leaves your machine.
-
-### Other things you can do:
+You're now chatting with your own AI. It runs **on your machine** — no data leaves your computer.
 
 | Command | What it does |
 |---------|-------------|
-| `hermes` | Start chatting |
+| `hermes` | Start chatting with your local model |
 | `hermes desktop` | Open the desktop app (nicer interface) |
-| `hermes setup` | Run the setup wizard to configure messaging, voice, etc. |
-| `hermes doctor` | Check that everything is working |
+| `hermes setup` | Configure messaging (Telegram, Discord), voice, etc. |
+| `hermes doctor` | Health check — verifies model, runtime, and config |
 | `hermes model` | Switch between local and cloud models |
+| `ollama list` | See which local models you have |
+| `ollama run qwen2.5:7b` | Test a model directly in terminal |
 
 ---
 
-## Troubleshooting
+## If Something Goes Wrong: Do It Yourself
 
-| Problem | Solution |
-|---------|----------|
-| **"command not found: hermes"** | Close and reopen your terminal, then try again |
-| **Model download is slow** | That's normal (large file). Let it finish, or use `python install.py --cloud-only` to skip it |
-| **"command not found: ollama"** | Start it: type `ollama serve` (Mac/Linux) or launch Ollama from Start Menu (Windows) |
-| **Agent feels slow** | Your model may be too big for your hardware. Re-run with `python install.py --cloud-only` to use cloud models instead |
-| **Python not found** | Install Python from [python.org](https://python.org) first |
+The installer automates steps that you can also do manually. If it fails partway through, here's how to finish by hand:
+
+### 1. Install Hermes manually
+
+**Mac/Linux:**
+```
+curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
+```
+
+**Windows:**
+```
+pip install hermes-agent
+```
+
+Verify: `hermes --version`
+
+### 2. Install Ollama manually
+
+**Mac:**
+```
+brew install ollama
+```
+
+**Linux:**
+```
+curl -fsSL https://ollama.com/install.sh | sh
+```
+
+**Windows:** Download the installer from [ollama.com](https://ollama.com)
+
+### 3. Download a model manually
+
+Pick the model that matches your RAM:
+
+| Your RAM | Command |
+|----------|---------|
+| 8–15 GB | `ollama pull qwen2.5:7b` |
+| 16–31 GB | `ollama pull llama3.1:8b` |
+| 32–63 GB | `ollama pull qwen2.5:14b` |
+| 64+ GB | `ollama pull qwen2.5:32b` |
+
+### 4. Start Ollama
+
+```
+ollama serve
+```
+
+Leave this running in a terminal window. Open a **new** terminal window for the next steps.
+
+### 5. Configure Hermes manually
+
+Run the setup wizard:
+```
+hermes setup
+```
+
+Or edit the config file directly:
+```
+hermes config edit
+```
+
+Add these lines:
+```yaml
+model:
+  default: qwen2.5:7b          # or whichever model you pulled
+  provider: custom:ollama-local
+  base_url: http://localhost:11434/v1
+  api_key: ollama
+
+custom_providers:
+  - name: ollama-local
+    base_url: http://localhost:11434/v1
+```
+
+### 6. Add OpenRouter manually (optional)
+
+```
+hermes config set model.provider openrouter
+```
+
+Then edit `~/.hermes/.env` and add:
+```
+OPENROUTER_API_KEY=sk-or-your-key-here
+```
+
+Get a key at [openrouter.ai/keys](https://openrouter.ai/keys).
+
+### 7. Verify everything works
+
+```
+hermes doctor
+```
+
+This checks your model, runtime, config, and connectivity. If it reports errors, fix them one by one.
+
+---
+
+## Common Problems
+
+| Problem | Fix |
+|---------|-----|
+| `hermes: command not found` | Close terminal, reopen it, try again. If still missing, run `source ~/.zshrc` (Mac) or `source ~/.bashrc` (Linux) |
+| `ollama: command not found` | Open a new terminal and run `ollama serve` first |
+| Model download fails | Run `ollama pull <model>` manually (see table above) |
+| Agent is very slow | Your model may be too big. Re-run `python install.py --cloud-only` to use cloud instead |
+| `python: command not found` | Install Python from [python.org](https://python.org) |
+| Installer says "not enough disk" | Free up space — you need at least 10 GB |
+| Config file seems wrong | Delete `~/.hermes/config.yaml` and re-run the installer, or use `hermes setup` |
 
 ---
 
 ## Privacy
 
-- Your conversations stay **on your computer** by default
-- The local model runs entirely offline after setup
-- OpenRouter (if configured) only activates for tasks you send to cloud models
-- Your API key is stored locally in `~/.hermes/.env` and never shared
+- Conversations stay **on your computer** by default
+- The local model runs offline after setup
+- OpenRouter (if configured) only activates when you explicitly use a cloud model
+- Your API key is stored locally in `~/.hermes/.env` — never shared
 
 ---
 
-*Questions? See the full documentation at [github.com/tojdpg/hermes-one-click](https://github.com/tojdpg/hermes-one-click) or the Hermes docs at [hermes-agent.nousresearch.com/docs](https://hermes-agent.nousresearch.com/docs/).*
+*Full docs: [github.com/tojdpg/hermes-one-click](https://github.com/tojdpg/hermes-one-click) · [hermes-agent.nousresearch.com/docs](https://hermes-agent.nousresearch.com/docs/)*
