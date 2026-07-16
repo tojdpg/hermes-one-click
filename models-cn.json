@@ -1,0 +1,94 @@
+{
+  "_comment": "Model selection rules for Hermes One-Click Installer (China version). Uses ModelScope for downloads and Qwen models only.",
+  "tiers": [
+    {
+      "name": "cloud-only",
+      "min_ram_gb": 0,
+      "max_ram_gb": 7,
+      "description": "Machine too weak for local inference — cloud-only via domestic providers",
+      "local_model": null,
+      "runtime": null
+    },
+    {
+      "name": "minimal",
+      "min_ram_gb": 8,
+      "max_ram_gb": 15,
+      "description": "Bare minimum — small but usable 7B quantized",
+      "local_model": {
+        "id": "qwen2.5-7b-instruct",
+        "modelscope_id": "Qwen/Qwen2.5-7B-Instruct-GGUF",
+        "modelscope_file": "qwen2.5-7b-instruct-q4_k_m.gguf",
+        "ollama_tag": "qwen2.5:7b",
+        "size_gb": 4.7,
+        "context_length": 32768
+      },
+      "runtime": "ollama"
+    },
+    {
+      "name": "recommended",
+      "min_ram_gb": 16,
+      "max_ram_gb": 31,
+      "description": "Recommended — 14B quantized, smooth for daily use",
+      "local_model": {
+        "id": "qwen2.5-14b-instruct",
+        "modelscope_id": "Qwen/Qwen2.5-14B-Instruct-GGUF",
+        "modelscope_file": "qwen2.5-14b-instruct-q4_k_m.gguf",
+        "ollama_tag": "qwen2.5:14b",
+        "size_gb": 8.9,
+        "context_length": 32768
+      },
+      "runtime": "ollama"
+    },
+    {
+      "name": "strong",
+      "min_ram_gb": 32,
+      "max_ram_gb": 63,
+      "description": "Strong local — 14B quantized, capable reasoning",
+      "local_model": {
+        "id": "qwen2.5-14b-instruct",
+        "modelscope_id": "Qwen/Qwen2.5-14B-Instruct-GGUF",
+        "modelscope_file": "qwen2.5-14b-instruct-q4_k_m.gguf",
+        "ollama_tag": "qwen2.5:14b",
+        "size_gb": 8.9,
+        "context_length": 32768
+      },
+      "runtime": "ollama"
+    },
+    {
+      "name": "high-end",
+      "min_ram_gb": 64,
+      "max_ram_gb": 999,
+      "description": "High-end — 32B quantized, serious reasoning",
+      "local_model": {
+        "id": "qwen2.5-32b-instruct",
+        "modelscope_id": "Qwen/Qwen2.5-32B-Instruct-GGUF",
+        "modelscope_file": "qwen2.5-32b-instruct-q4_k_m.gguf",
+        "ollama_tag": "qwen2.5:32b",
+        "size_gb": 19.9,
+        "context_length": 32768
+      },
+      "runtime": "ollama"
+    }
+  ],
+  "runtimes": {
+    "ollama": {
+      "macos": "brew install ollama",
+      "linux": "curl -fsSL https://ollama.com/install.sh | sh",
+      "windows": "winget install Ollama.Ollama"
+    },
+    "llama_cpp": {
+      "macos": "brew install llama.cpp",
+      "linux": "uv pip install llama-cpp-python",
+      "windows": "uv pip install llama-cpp-python"
+    },
+    "mlx": {
+      "macos": "pip install mlx-lm",
+      "linux": null,
+      "windows": null
+    }
+  },
+  "cloud_providers": {
+    "primary": "GLM (Zhipu), DeepSeek, Kimi (Moonshot), DashScope (Alibaba)",
+    "note": "All natively supported by Hermes. Configure via 'hermes setup'."
+  }
+}
