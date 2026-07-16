@@ -1,0 +1,82 @@
+{
+  "_comment": "Model selection rules for Hermes One-Click Installer. Models are sized to available RAM/GPU. Each tier lists runtime, model, and min RAM.",
+  "tiers": [
+    {
+      "name": "cloud-only",
+      "min_ram_gb": 0,
+      "max_ram_gb": 7,
+      "description": "Machine too weak for local inference — cloud-only via OpenRouter",
+      "local_model": null,
+      "runtime": null
+    },
+    {
+      "name": "minimal",
+      "min_ram_gb": 8,
+      "max_ram_gb": 15,
+      "description": "Bare minimum — small but usable 7B quantized",
+      "local_model": {
+        "id": "qwen2.5-7b-instruct",
+        "gguf_url": "https://huggingface.co/Qwen/Qwen2.5-7B-Instruct-GGUF/resolve/main/qwen2.5-7b-instruct-q4_k_m.gguf",
+        "size_gb": 4.7,
+        "context_length": 32768
+      },
+      "runtime": "ollama"
+    },
+    {
+      "name": "recommended",
+      "min_ram_gb": 16,
+      "max_ram_gb": 31,
+      "description": "Recommended — 8B quantized, smooth for daily use",
+      "local_model": {
+        "id": "llama-3.1-8b-instruct",
+        "gguf_url": "https://huggingface.co/lmstudio-community/Meta-Llama-3.1-8B-Instruct-GGUF/resolve/main/Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf",
+        "size_gb": 4.9,
+        "context_length": 131072
+      },
+      "runtime": "ollama"
+    },
+    {
+      "name": "strong",
+      "min_ram_gb": 32,
+      "max_ram_gb": 63,
+      "description": "Strong local — 14B quantized, capable reasoning",
+      "local_model": {
+        "id": "qwen2.5-14b-instruct",
+        "gguf_url": "https://huggingface.co/Qwen/Qwen2.5-14B-Instruct-GGUF/resolve/main/qwen2.5-14b-instruct-q4_k_m.gguf",
+        "size_gb": 8.9,
+        "context_length": 32768
+      },
+      "runtime": "ollama"
+    },
+    {
+      "name": "high-end",
+      "min_ram_gb": 64,
+      "max_ram_gb": 999,
+      "description": "High-end — 32B quantized, serious reasoning",
+      "local_model": {
+        "id": "qwen2.5-32b-instruct",
+        "gguf_url": "https://huggingface.co/Qwen/Qwen2.5-32B-Instruct-GGUF/resolve/main/qwen2.5-32b-instruct-q4_k_m.gguf",
+        "size_gb": 19.9,
+        "context_length": 32768
+      },
+      "runtime": "ollama"
+    }
+  ],
+  "runtimes": {
+    "ollama": {
+      "macos": "brew install ollama",
+      "linux": "curl -fsSL https://ollama.com/install.sh | sh",
+      "windows": "winget install Ollama.Ollama"
+    },
+    "llama_cpp": {
+      "macos": "brew install llama.cpp",
+      "linux": "uv pip install llama-cpp-python",
+      "windows": "uv pip install llama-cpp-python"
+    },
+    "mlx": {
+      "macos": "pip install mlx-lm",
+      "linux": null,
+      "windows": null
+    }
+  }
+}
