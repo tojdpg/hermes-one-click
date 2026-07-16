@@ -7,7 +7,7 @@ Self-contained installer that:
   2. Installs Hermes Agent (via official installer)
   3. Recommends and downloads a local model sized to the machine
   4. Installs a local inference runtime (Ollama by default)
-  5. Optionally configures OpenRouter for cloud fallback
+  5. Defers cloud setup to `hermes setup` (no API key friction during install)
   6. Writes a ready-to-use Hermes config
 
 Usage:
@@ -533,8 +533,8 @@ Get a free API key at: {OPENROUTER_URL}{C_RESET}
     return api_key
 
 
-def write_hermes_config(hw, tier, runtime_name, ollama_model=None, openrouter_key=None):
-    """Write a Hermes config.yaml that wires up the local model + OpenRouter fallback."""
+def write_hermes_config(hw, tier, runtime_name, ollama_model=None):
+    """Write a Hermes config.yaml that wires up the local model."""
     header("Writing Hermes Configuration")
 
     config_dir = HERMES_HOME
@@ -585,12 +585,12 @@ def write_hermes_config(hw, tier, runtime_name, ollama_model=None, openrouter_ke
     if model and model.get("context_length"):
         config_lines.append(f"  context_length: {model['context_length']}")
 
-    # OpenRouter as fallback provider
-    if openrouter_key:
-        config_lines.extend([
-            "",
-            "# OpenRouter cloud fallback configured (see .env for API key)",
-        ])
+    # Cloud fallback note
+    config_lines.extend([
+        "",
+        "# Cloud fallback: run 'hermes setup' to configure OpenRouter, OpenAI,",
+        "# Anthropic, Google, or 20+ other providers.",
+    ])
 
     # Memory
     config_lines.extend([
@@ -636,7 +636,7 @@ def write_hermes_config(hw, tier, runtime_name, ollama_model=None, openrouter_ke
     ok(f"Config written to {config_path}")
 
 
-def print_next_steps(hw, tier, runtime_name, ollama_model=None, openrouter_key=None):
+def print_next_steps(hw, tier, runtime_name, ollama_model=None):
     """Print a summary and next steps."""
     header("Installation Complete!")
 
@@ -649,7 +649,7 @@ def print_next_steps(hw, tier, runtime_name, ollama_model=None, openrouter_key=N
   Hardware tier:  {tier['name']} — {tier['description']}
   Local model:    {model_name or 'None (cloud-only)'}
   Runtime:        {runtime_name or 'None'}
-  OpenRouter:     {'✓ configured' if openrouter_key else '✗ not set (add via hermes setup)'}
+  Cloud:          Not configured (run 'hermes setup' to add)
 
 {C_BOLD}Next Steps:{C_reset()}
   1. {C_BOLD}Start Hermes:{C_RESET}
@@ -670,13 +670,11 @@ def print_next_steps(hw, tier, runtime_name, ollama_model=None, openrouter_key=N
        ollama serve          # start the runtime
        ollama run {ollama_model}   # test the model""")
 
-    if not openrouter_key:
-        print(f"""
-  6. {C_BOLD}Add OpenRouter for cloud fallback:{C_RESET}
-       Get a key at {OPENROUTER_URL}
-       Then: hermes config set model.provider openrouter""")
-
     print(f"""
+  {C_BOLD}Want cloud models?{C_RESET} Run:
+       hermes setup
+  Choose from 20+ providers: OpenRouter, OpenAI, Anthropic, Google, and more.
+
 {C_DIM}Docs: https://hermes-agent.nousresearch.com/docs/
 GitHub: https://github.com/tojdpg/hermes-one-click{C_RESET}
 """)
@@ -787,16 +785,13 @@ def main():
                 if runtime_name == "ollama":
                     warn(f"  Run: ollama pull {_map_to_ollama_model(tier['local_model']['id'])}")
 
-    # ── Step 6: Configure OpenRouter (optional) ──
-    openrouter_key = configure_openrouter(non_interactive=args.non_interactive)
-
-    # ── Step 7: Write Hermes config ──
+    # ── Step 6: Write Hermes config ──
     write_hermes_config(hw, tier, runtime_name if not args.cloud_only else None,
-                       ollama_model, openrouter_key)
+                       ollama_model)
 
-    # ── Step 8: Print summary ──
+    # ── Step 7: Print summary ──
     print_next_steps(hw, tier, runtime_name if not args.cloud_only else None,
-                    ollama_model, openrouter_key)
+                    ollama_model)
 
 
 if __name__ == "__main__":

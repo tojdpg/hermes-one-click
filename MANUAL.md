@@ -62,32 +62,25 @@ The installer then runs through these steps automatically:
 | **3. Install Hermes** | Installs the Hermes Agent framework | 1–2 min |
 | **4. Install Ollama** | Installs the local model runtime | 1–2 min |
 | **5. Download model** | Downloads a 5–20 GB model file | 5–30 min |
-| **6. Ask about OpenRouter** | Optional — see below | 10 seconds |
-| **7. Write config** | Creates `~/.hermes/config.yaml` automatically | instant |
+| **6. Write config** | Creates `~/.hermes/config.yaml` automatically | instant |
 
 During step 5, you'll see a progress bar or download percentage. **Leave the terminal open and let it finish.** This is the slow part.
 
-### The OpenRouter question
-
-After the model downloads, you'll see:
-
-```
-Add OpenRouter API key now? [y/N]:
-```
-
-- **Type `y`** and paste a key from [openrouter.ai/keys](https://openrouter.ai/keys) → gives your agent cloud fallback for hard tasks (Claude, GPT, etc.)
-- **Type `N`** or just press Enter → skip, everything still works locally. You can add it later.
-
-### When it's done
+When it's done:
 
 ```
 ✓ Hermes One-Click Installer finished successfully!
 
+  Cloud:          Not configured (run 'hermes setup' to add)
+
 Next Steps:
   1. hermes              ← start chatting
-  2. hermes setup        ← run setup wizard (recommended)
+  2. hermes setup        ← add cloud models (OpenRouter, OpenAI, Anthropic, etc.)
   3. hermes desktop      ← open desktop app
   4. hermes doctor       ← check everything works
+
+Want cloud models? Run:
+     hermes setup
 ```
 
 ## Step 4: Start Using It
@@ -186,18 +179,15 @@ custom_providers:
     base_url: http://localhost:11434/v1
 ```
 
-### 6. Add OpenRouter manually (optional)
+### 6. Add cloud models (optional)
+
+If you want cloud models alongside your local one:
 
 ```
-hermes config set model.provider openrouter
+hermes setup
 ```
 
-Then edit `~/.hermes/.env` and add:
-```
-OPENROUTER_API_KEY=sk-or-your-key-here
-```
-
-Get a key at [openrouter.ai/keys](https://openrouter.ai/keys).
+This wizard supports OpenRouter, OpenAI, Anthropic, Google, and 20+ other providers. Pick one, paste your API key, done.
 
 ### 7. Verify everything works
 

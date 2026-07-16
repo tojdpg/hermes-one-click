@@ -13,7 +13,7 @@ python install.py
 
 The script detects your hardware, installs Hermes + Ollama, downloads a model sized to your machine, and writes the config. Takes 5–30 min (mostly the model download).
 
-When asked for an OpenRouter key: type `y` and paste one from [openrouter.ai/keys](https://openrouter.ai/keys), or press `N` to skip.
+Want cloud models later? Just run `hermes setup` — supports OpenRouter, OpenAI, Anthropic, Google, and 20+ more.
 
 ## Use
 
